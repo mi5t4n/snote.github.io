@@ -11,10 +11,19 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(woff|woff2|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+        use: {
+          loader: "url-loader",
+          options: {
+            limit: 50000,
+          },
+        },
+      },
+      {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          'css-loader'
+          'css-loader',
         ],
       },      {
         test: /\.vue$/,
@@ -37,7 +46,7 @@ module.exports = {
           name: '[name].[ext]?[hash]'
         }
       }
-    ]
+    ],
   },
   resolve: {
     alias: {
