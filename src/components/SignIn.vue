@@ -4,15 +4,15 @@
         <div class="card-stacked">
           <div class="card-content">
             <div class="input-field">
-              <input id="email" type="text" class="validate" v-bind:='email'>
+              <input id="email" type="text" class="validate" v-bind='email'>
               <label for="email">Email</label>
             </div>
             <div class="input-field">
               <input id="password" type="password" class="validate" v-bind='password'>
               <label for="email">Password</label>
             </div>
-            <button class="waves-effect waves-light btn">Log In</button>
-            <button class="waves-effect waves-light btn">Sign Up</button>
+            <button class="waves-effect waves-light btn">Sign In</button>
+            <router-link to='/signup'><button class="waves-effect waves-light btn">Sign Up</button></router-link>
           </div>                        
         </div>
     </div>

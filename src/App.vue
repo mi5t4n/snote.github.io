@@ -2,12 +2,11 @@
   <div id="app">
     <nav-bar></nav-bar>
     <div class="row">
+        <div class="col s0 m6"></div>                
         <div class="col s12 m6">
-          <!-- <sign-in></sign-in>   -->
-        </div>                
-        <div class="col s12 m6">
-          <sign-up></sign-up>
+          <router-view></router-view>
         </div>
+        <div class="col s0 m6"></div>
     </div>      
   </div>
 </template>

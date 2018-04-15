@@ -9,12 +9,13 @@
         </ul>
         <nav>
         <div class="nav-wrapper">
-            <a href="#!" class="brand-logo">Snote</a>
+            <!-- <a href="#!" class="brand-logo">Snote</a> -->
+            <router-link to='/' class="brand-logo">Snote</router-link>
             <ul class="right hide-on-med-and-down">
-            <li><a href="sass.html">How it works?</a></li>
-            <li><a href="badges.html">Contact Us</a></li>
-            <!-- Dropdown Trigger -->
-            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
+                <li><a href="sass.html">How it works?</a></li>
+                <li><a href="badges.html">Contact Us</a></li>
+                <!-- Dropdown Trigger -->
+                <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
             </ul>
         </div>
         </nav>
