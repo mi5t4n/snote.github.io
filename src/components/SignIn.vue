@@ -3,6 +3,9 @@
       <div class="card horizontal">
         <div class="card-stacked">
           <div class="card-content">
+            <div>
+              <span id="errorMsg" v-if='showErrorMsg'>Error Message</span>
+            </div>
             <div class="input-field">
               <input id="email" type="text" class="validate" v-bind='email'>
               <label for="email">Email</label>
@@ -20,31 +23,32 @@
 </template>
 
 <script>
-export default {
-  name: 'SignIn',
-  data() {
+  export default {
+    name: 'SignIn',
+    data() {
       return {
-          email: '',
-          password: ''
+        email: '',
+        password: '',
+        showErrorMsg: true,
       }
-  },
-  methods: {
+    },
+    methods: {
       signin: function (){
-            firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
+        firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
 
-                console.log('errorCode = ' + errorCode);
-                console.log('errorMessage = ' + errorMessage);
-            });
+          console.log('errorCode = ' + errorCode);
+          console.log('errorMessage = ' + errorMessage);
+        });
 
-            firebase.auth().currentUser.sendEmailVerification().then(function() {
-                console.log('Email verification sent !!!');
-            });
+        firebase.auth().currentUser.sendEmailVerification().then(function() {
+          console.log('Email verification sent !!!');
+        });
       }
+    }
   }
-}
 </script>
 
 <style scoped>
