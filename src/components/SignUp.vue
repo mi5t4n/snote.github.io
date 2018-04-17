@@ -28,52 +28,52 @@
 <script>
   import firebase from 'firebase';
 
+  console.log('SignUp.vue');
+
   export default {
     name: 'SignUp',
     data(){
       return {
-          email: '',
-          password: '',
-          retypePassword:'',
-          info : {
-            show: false,
-            msg:'',
-            color: 'red'                 
-          }
+        email: '',
+        password: '',
+        retypePassword:'',
+        info : {
+          show: false,
+          msg:'',
+          color: 'red'                 
+        }
       }
     },
     methods: {
       signup: function(){
-          var vm = this;
+        var vm = this;
 
-          console.log('signup');
-          if (firebase.auth().currentUser) {        
-            firebase.auth().signOut()  
-          } 
-          if (this.retypePassword != this.password) {
-              console.log('Password mismatch');
-              return;
-          }
-          var result = firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
+        console.log('signup');
+        if (firebase.auth().currentUser) {        
+          firebase.auth().signOut()  
+        } 
+        if (this.retypePassword != this.password) {
+          console.log('Password mismatch');
+          return;
+        }
+        var result = firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
 
-                console.log('errorCode = ' + errorCode);
-                console.log('errorMessage = ' + errorMessage);
-                
-                console.log(vm);
-                if (errorCode != ''){
-                  vm.info = {msg : errorMessage, color:'red', show: true};              
-                }                              
-            }).then(function(){
-              vm.$router.push('/');
-            });
-          // console.log(result);
-          // console.log('uid = ' + result.uid);
-          // if (firebase.auth().currentUser){
-          //   this.$router.push('/');
-          // }
+          console.log('errorCode = ' + errorCode);
+          console.log('errorMessage = ' + errorMessage);
+          
+          console.log(vm);
+          if (errorCode != ''){
+            vm.info = {msg : errorMessage, color:'red', show: true};              
+          }                              
+        });
+        // console.log(result);
+        // console.log('uid = ' + result.uid);
+        // if (firebase.auth().currentUser){
+        //   this.$router.push('/');
+        // }
       }
     }
   }

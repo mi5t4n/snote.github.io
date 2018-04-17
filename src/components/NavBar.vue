@@ -36,4 +36,11 @@ $(document).ready(function(){
 </script>
 
 <style lang="css" scoped>
+    #NavBar {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .brand-logo{
+        padding-left: 10px;
+    }
 </style>

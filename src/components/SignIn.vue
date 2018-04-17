@@ -23,6 +23,8 @@
 </template>
 
 <script>
+  console.log('SignIn.vue');
+
   export default {
     name: 'SignIn',
     data() {
