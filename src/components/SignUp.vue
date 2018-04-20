@@ -27,9 +27,14 @@
 
 <script>
   import firebase from 'firebase';
-
   console.log('SignUp.vue');
 
+// firebase.auth().onAuthStateChanged(function(user) {
+//   if (user) {
+//     // User is signed in.
+  
+//   }
+// });
   export default {
     name: 'SignUp',
     data(){
@@ -56,7 +61,7 @@
           console.log('Password mismatch');
           return;
         }
-        var result = firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
+        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -69,11 +74,13 @@
             vm.info = {msg : errorMessage, color:'red', show: true};              
           }                              
         });
-        // console.log(result);
-        // console.log('uid = ' + result.uid);
-        // if (firebase.auth().currentUser){
-        //   this.$router.push('/');
-        // }
+        
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // User is signed in.
+            vm.$router.push('/signin');
+          }
+        });
       }
     }
   }

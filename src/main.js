@@ -24,7 +24,7 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   render: h => h(App),
-  router: router
+  router: router,  
 });
 
 // Initialize Firebase
@@ -37,4 +37,3 @@ var config = {
   messagingSenderId: "659464035795"
 };
 firebase.initializeApp(config);
-

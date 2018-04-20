@@ -26,13 +26,8 @@
 var $ = require('jquery');
 
 export default {
-    name: 'NavBar',
+    name: 'NavBar'
 }
-
-$(document).ready(function(){
-  $('.dropdown-trigger').dropdown({hover:false});
-});
-
 </script>
 
 <style lang="css" scoped>
