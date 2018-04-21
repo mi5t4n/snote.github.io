@@ -2,9 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import 'material-design-icons/iconfont/material-icons.css'
-import 'materialize-css'
-import 'materialize-css/dist/css/materialize.css'
-import $ from 'jquery'
 import firebase from 'firebase'
 
 //import vue components

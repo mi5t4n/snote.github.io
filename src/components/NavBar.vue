@@ -23,16 +23,9 @@
 </template>
 
 <script>
-  var $ = require('jquery');
-  // import 'materialize-css';
-
   export default {
     name: 'NavBar'
   }
-
-  // $(document).ready(function(){
-  //   $('.dropdown-trigger').dropdown({hover: false});
-  // });
 </script>
 
 <style lang="css" scoped>
