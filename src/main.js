@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
+// Vue Material
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css' // This line here
+
+Vue.use(VueMaterial)
 import 'material-design-icons/iconfont/material-icons.css'
 import firebase from 'firebase'
 
