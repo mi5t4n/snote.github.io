@@ -1,1 +1,0 @@
-# snote.github.io
