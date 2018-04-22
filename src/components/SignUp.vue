@@ -138,7 +138,7 @@
             //Redirect to signin page
             setTimeout(() => {
               vm.$router.push('/signin')
-            }, 2000);
+            }, 3000);
           }
         });
       },

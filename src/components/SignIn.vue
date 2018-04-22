@@ -30,6 +30,7 @@
 
         <md-card-actions>
           <md-button type="submit" class="md-raised md-primary" :disabled="sending">Submit</md-button>
+          &nbsp;&nbsp;<router-link to='passwordreset'>Forget password?</router-link>
         </md-card-actions>
       </md-card>
 
@@ -90,13 +91,12 @@
         this.$v.$reset()
         this.form.email = null
         this.form.password = null
-        this.form.repassword = null
       },
       saveUser () {
         this.sending = true
         var vm = this;
 
-        console.log('signup');
+        console.log('signin');
         if (firebase.auth().currentUser) {        
           firebase.auth().signOut()  
         } 
@@ -123,18 +123,18 @@
           if (user) {
             // User is signed in.
             vm.sending = false;
-            vm.userSaved = true;
-            
             if (!user.emailVerified){
               user.sendEmailVerification().then(function() {
-                errorMessage = 'Email verification sent !!!';
+                vm.isFirebaseResult = true;
+                vm.firebaseResult = 'Email verification sent !!!';                
               }).catch(function(error) {
-                console.log(error);
+                //console.log(error);
+                vm.isFirebaseResult = true;
+                vm.firebaseResult = error.message;
               });
+            } else {              
+              vm.userSaved = true;            
             }
-
-            vm.isFirebaseResult = true;
-            vm.firebaseResult = errorMessage;
           }
         });
       },
