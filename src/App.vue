@@ -51,9 +51,14 @@
         <router-view></router-view>
       </md-app-content>
     </md-app>
+    
     <md-snackbar :md-active.sync="isUserLoggedIn">Logged in successfully !!!</md-snackbar>
     <md-snackbar :md-active.sync="success">Logged out successfully !!!</md-snackbar>
     <md-snackbar :md-active.sync="error.isError">{{ error.message }}</md-snackbar>
+
+    <md-button class="md-fab md-primary md-fab-bottom-right md-fixed" v-if="isUserLoggedIn == true">
+      <md-icon>edit</md-icon>
+    </md-button>
   </div>
 </template>
 
