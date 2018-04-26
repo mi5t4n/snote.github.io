@@ -100,32 +100,37 @@ export const store = new Vuex.Store({
       // Reach out to firebase and store it
     },
     signUserUp ({commit}, payload) {
-      commit('setLoading', true)
-      commit('clearError')
-      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
-        .then(
-          user => {
-            commit('setLoading', false)
-            const newUser = {
-              detail: user,
-              notes: []
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        commit('clearError')
+        firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+          .then(
+            user => {
+              commit('setLoading', false)
+              const newUser = {
+                detail: user,
+                notes: []
+              }
+              commit('setUser', newUser)
+              commit('setUserSaved', true)
+              resolve()
             }
-            commit('setUser', newUser)
-            commit('setUserSaved', true)
-          }
-        )
-        .catch(
-          error => {
-            commit('setLoading', false)
-            commit('setError', error)
-            console.log(error)
-          }
-        )
+          )
+          .catch(
+            error => {
+              commit('setLoading', false)
+              commit('setError', error)
+              reject(error)
+              console.log(error)
+            }
+          )
+      });
     },
     signUserIn ({commit}, payload) {
-      commit('setLoading', true)
-      commit('clearError')
-      firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        commit('clearError')
+        firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
             commit('setLoading', false)
@@ -134,15 +139,18 @@ export const store = new Vuex.Store({
               registeredMeetups: []
             }
             commit('setUser', newUser)
+            resolve()
           }
         )
         .catch(
           error => {
             commit('setLoading', false)
             commit('setError', error)
+            reject(error)
             console.log(error)
           }
         )
+      });      
     },
     autoSignIn ({commit}, payload) {
       commit('setUser', {id: payload.uid, registeredMeetups: []})

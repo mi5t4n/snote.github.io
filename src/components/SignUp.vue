@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import * as firebase from 'firebase'
   import { validationMixin } from 'vuelidate'
   import {
@@ -91,6 +91,9 @@
       }
     },
     methods: {
+      ...mapActions([
+        'signUserUp'
+      ]),
       getValidationClass (fieldName) {
         const field = this.$v.form[fieldName]
 
@@ -107,7 +110,18 @@
         this.form.confirmPassword = null
       },
       saveUser () {
-        this.$store.dispatch('signUserUp', { email: this.form.email, password: this.form.password });
+        this.signUserUp({ email: this.form.email, password: this.form.password })
+          .then(() => {
+            console.log('promise return')
+            setTimeout(() => {
+              this.$router.push('/home');
+            },2000)
+            
+          })
+          .catch((error) => {
+            console.log('error');
+            console.log('promise error')
+          });
       },
       validateUser () {
         this.$v.$touch()
