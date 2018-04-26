@@ -11,43 +11,44 @@
             <div class="md-layout-item">
               <md-field :class="getValidationClass('email')">
                 <label for="email">Email</label>
-                <md-input type="email" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending" />
+                <md-input type="email" name="email" id="email" autocomplete="email" v-model="form.email" :disabled="loading" />
                 <span class="md-error" v-if="!$v.form.email.required">The email is required</span>
                 <span class="md-error" v-else-if="!$v.form.email.email">Invalid email</span>
               </md-field>
 
               <md-field :class="getValidationClass('password')">
                 <label for="password">Password</label>
-                <md-input type="password" name="password" id="password" v-model="form.password" :disabled="sending" />
+                <md-input type="password" name="password" id="password" v-model="form.password" :disabled="loading" />
                 <span class="md-error" v-if="!$v.form.password.required">The password is required</span>
                 <span class="md-error" v-else-if="!$v.form.password.minlength">The password length must be minimum 6 characters</span>
               </md-field>
               
-              <md-field :class="getValidationClass('repassword')">
-                <label for="repassword">Retype Password</label>
-                <md-input type="password" id="repassword" v-model="form.repassword" :disabled="sending" />
-                <span class="md-error" v-if="!$v.form.repassword.required">Password did not match</span>
-                <span class="md-error" v-else-if="!$v.form.repassword.minlength">Password did not match</span>
+              <md-field :class="getValidationClass('confirmPassword')">
+                <label for="confirmPassword">Confirm Password</label>
+                <md-input type="password" id="confirmPassword" v-model="form.confirmPassword" :disabled="loading" />
+                <span class="md-error" v-if="!$v.form.confirmPassword.required">Password did not match</span>
+                <span class="md-error" v-else-if="!$v.form.confirmPassword.minlength">Password did not match</span>
               </md-field>
             </div>
           </div>
         </md-card-content>
 
-        <md-progress-bar md-mode="indeterminate" v-if="sending" />
+        <md-progress-bar md-mode="indeterminate" v-if="loading" />
 
         <md-card-actions>
-          <md-button type="submit" class="md-raised md-primary" :disabled="sending">Submit</md-button>
+          <md-button type="submit" class="md-raised md-primary" :disabled="loading">Submit</md-button>
         </md-card-actions>
       </md-card>
 
       <md-snackbar :md-active.sync="userSaved">The {{ form.email }} was created successfully !!!</md-snackbar>
-      <md-snackbar :md-active.sync="isFirebaseResult">{{firebaseResult}}</md-snackbar>
+      <md-snackbar :md-active.sync="error.isError">{{ error.message }}</md-snackbar>
     </form>
   </div>
 </template>
 
 <script>
-  import firebase from 'firebase'
+  import { mapGetters } from 'vuex'
+  import * as firebase from 'firebase'
   import { validationMixin } from 'vuelidate'
   import {
     required,
@@ -58,20 +59,22 @@
   } from 'vuelidate/lib/validators'
 
   export default {
-    name: 'FormValidation',
+    name: 'SignUp',
     mixins: [validationMixin],
     data: () => ({
       form: {
         email: null,
         password: null,
-        repassword:null
+        confirmPassword:null
       },
-      firebaseResult: null,
-      isFirebaseResult: false,
-      userSaved: false,
-      sending: false,
-      lastUser: null
     }),
+    computed: {
+      ...mapGetters([
+        'loading',
+        'error',
+        'userSaved'
+      ]),
+    },
     validations: {
       form: {
         email: {
@@ -82,7 +85,7 @@
           required,
           minLength: minLength(6)
         },
-        repassword: {
+        confirmPassword: {
           sameAsPassword: sameAs('password')
         }
       }
@@ -101,46 +104,10 @@
         this.$v.$reset()
         this.form.email = null
         this.form.password = null
-        this.form.repassword = null
+        this.form.confirmPassword = null
       },
       saveUser () {
-        this.sending = true
-        var vm = this;
-
-        console.log('signup');
-        if (firebase.auth().currentUser) {        
-          firebase.auth().signOut()  
-        } 
-                
-        firebase.auth().createUserWithEmailAndPassword(this.form.email, this.form.password).catch(function(error) {
-          vm.sending = false;
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-
-          console.log('errorCode = ' + errorCode);
-          console.log('errorMessage = ' + errorMessage);
-          
-          console.log(vm);
-          if (errorCode != ''){
-            vm.isFirebaseResult = true;
-            vm.firebaseResult = errorMessage;
-          }                      
-
-        });
-        
-        firebase.auth().onAuthStateChanged(function(user) {
-          if (user) {
-            // User is signed in.
-            vm.sending = false;
-            vm.userSaved = true;
-
-            //Redirect to signin page
-            setTimeout(() => {
-              vm.$router.push('/signin')
-            }, 3000);
-          }
-        });
+        this.$store.dispatch('signUserUp', { email: this.form.email, password: this.form.password });
       },
       validateUser () {
         this.$v.$touch()
