@@ -19,16 +19,26 @@ new Vue({
   el: '#app',
   render: h => h(App),
   router: router,  
-  store: store
+  store: store,
+  created(){
+    // Initialize Firebase
+    firebase.initializeApp({
+      apiKey: "AIzaSyCtTekdZj8fh7WFNdlhjrcoKiD84eiWyP0",
+      authDomain: "snote-3c02e.firebaseapp.com",
+      databaseURL: "https://snote-3c02e.firebaseio.com",
+      projectId: "snote-3c02e",
+      storageBucket: "snote-3c02e.appspot.com",
+      messagingSenderId: "659464035795"
+    });
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.$store.dispatch('autoSignIn', user)
+        this.$router.push('/home')
+      }
+    })
+    // this.$store.dispatch('loadMeetups')
+
+  }
 });
 
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyCtTekdZj8fh7WFNdlhjrcoKiD84eiWyP0",
-  authDomain: "snote-3c02e.firebaseapp.com",
-  databaseURL: "https://snote-3c02e.firebaseio.com",
-  projectId: "snote-3c02e",
-  storageBucket: "snote-3c02e.appspot.com",
-  messagingSenderId: "659464035795"
-};
-firebase.initializeApp(config);

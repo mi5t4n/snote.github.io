@@ -34,7 +34,7 @@
         </md-card-actions>
       </md-card>
 
-      <md-snackbar :md-active.sync="userSaved">The {{ form.email }} is successfully signed in!!!</md-snackbar>
+      <md-snackbar :md-active.sync="success">The {{ form.email }} is successfully signed in!!!</md-snackbar>
       <md-snackbar :md-active.sync="error.isError">{{ error.message }}</md-snackbar>
     </form>
   </div>
@@ -60,13 +60,14 @@
         email: null,
         password: null
       },
+      loading: false,
+      error: {
+        isError: false,
+        message: null
+      },
+      success: false
     }),
     computed: {
-      ...mapGetters([
-        'loading',
-        'error',
-        'userSaved'
-      ]),
     },
     validations: {
       form: {
@@ -99,8 +100,12 @@
         this.form.password = null
       },
       saveUser () {
+        this.loading = true;
        this.signUserIn({ email: this.form.email, password: this.form.password })
           .then(() => {
+            this.loading = false;
+            this.error = { isError: false, message: null }
+            this.success = true;
             console.log('promise return')
             setTimeout(() => {
               this.$router.push('/home');
@@ -108,6 +113,9 @@
             
           })
           .catch((error) => {
+            this.loading = false;
+            this.error = { isError: false, message: error.message }
+            this.success = false;
             console.log('error');
             console.log('promise error')
           });

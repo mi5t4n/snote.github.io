@@ -135,7 +135,7 @@ export const store = new Vuex.Store({
             user => {
               commit('setLoading', false)
               const newUser = {
-                id: user.uid,
+                detail: user,
                 registeredMeetups: []
               }
               commit('setUser', newUser)
@@ -155,11 +155,26 @@ export const store = new Vuex.Store({
       });      
     },
     autoSignIn ({commit}, payload) {
-      commit('setUser', {id: payload.uid, registeredMeetups: []})
+      commit('setUser', {detail: payload, notes: []})
     },
     logout ({commit}) {
-      firebase.auth().signOut()
-      commit('setUser', null)
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true)
+        commit('clearError')
+        firebase.auth().signOut()
+          .then(() => {
+            commit('setUserSaved', true)
+            commit('setUser', null)
+            resolve()
+        })
+          .catch((error) => {
+            commit('setLoading', false)
+            commit('setError', error)
+            commit('setUserSaved', false)
+            reject(error)
+            console.log(error);
+        });
+      });
     },
     clearError ({commit}) {
       commit('clearError')
@@ -192,6 +207,12 @@ export const store = new Vuex.Store({
     },
     userSaved (state){
       return state.userSaved
+    },
+    isUserLoggedIn(state){
+      if (state.user == null)
+        return false;
+      else 
+        return true;
     }
   }
 })

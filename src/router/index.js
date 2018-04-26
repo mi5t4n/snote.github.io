@@ -28,7 +28,12 @@ export default new Router({
       path: '/passwordreset',
       name: 'PasswordReset',
       component: PasswordReset
-    }
+    },
+    // {
+    //   path: '*',
+    //   name: 'ErrorPage',
+    //   component: { template: '<h1>Page Not Found</h1>' }
+    // }
   ],
   mode: 'history'
 });

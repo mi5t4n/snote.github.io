@@ -12,24 +12,33 @@
         <md-toolbar class="md-transparent" md-elevation="0">Navigation</md-toolbar>
 
         <md-list>
-          <md-list-item>
-            <md-icon>move_to_inbox</md-icon>
-            <span class="md-list-item-text">Home</span>
-          </md-list-item>
 
-          <router-link to='/signin'>
+          <router-link to='/home'>
+            <md-list-item @click="menuVisible = !menuVisible">
+              <md-icon>move_to_inbox</md-icon>
+              <span class="md-list-item-text">Home</span>
+            </md-list-item>
+          </router-link>
+
+          <router-link to='/signin' v-if="isUserLoggedIn == false">
             <md-list-item @click="menuVisible = !menuVisible">
               <md-icon>send</md-icon>
               <span class="md-list-item-text">Sign In</span>
             </md-list-item>
           </router-link>
 
-          <router-link to='/signup'>
+          <router-link to='/signup' v-if="isUserLoggedIn == false">
             <md-list-item @click="menuVisible = !menuVisible">              
                 <md-icon>delete</md-icon>
                 <span class="md-list-item-text">Sign Up</span>
             </md-list-item>
           </router-link>
+
+          
+          <md-list-item @click="userLogOut()" v-if="isUserLoggedIn == true">              
+              <md-icon>delete</md-icon>
+              <span class="md-list-item-text">Logout</span>
+          </md-list-item>
 
           <md-list-item @click="menuVisible = !menuVisible">
             <md-icon>error</md-icon>
@@ -42,6 +51,9 @@
         <router-view></router-view>
       </md-app-content>
     </md-app>
+    <md-snackbar :md-active.sync="isUserLoggedIn">Logged in successfully !!!</md-snackbar>
+    <md-snackbar :md-active.sync="success">Logged out successfully !!!</md-snackbar>
+    <md-snackbar :md-active.sync="error.isError">{{ error.message }}</md-snackbar>
   </div>
 </template>
 
@@ -59,10 +71,55 @@
 </style>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  name: 'Reveal',
+  name: 'App',
   data: () => ({
-    menuVisible: false
-  })
+    menuVisible: false,
+    loading: false,
+    error: {
+      isError: false,
+      message: null
+    },
+    success: false
+  }),
+  computed: {
+    ...mapGetters([
+      'isUserLoggedIn'
+    ]),
+    menuItems(){
+      let menuItems = [
+        {icon: 'move_to_inbox', title: 'Home', link: '/' },
+        {icon: 'send', title: 'Sign In', link: '/signin' },
+        {icon: 'delete', title: 'Sign Up', link: '/signup' },
+        {icon: 'error', title: 'Credits', link: '/' },
+      ]
+    }
+  },
+  methods: {
+    ...mapActions([
+        'logout'
+      ]),
+      userLogOut(){
+        this.loading = true;
+        this.logout().then(() => {
+          this.loading = false;
+          this.error = { isError: false, message: null }
+          this.success = true;
+          this.menuVisible = !this.menuVisible
+
+          setTimeout(() => {
+            this.$router.push('/')
+          },2000);
+            
+        }).catch((error) => {
+          this.loading = false;
+          this.error = { isError: true, message: error.message }
+          this.success = false;
+          console.log(error)
+        });
+      }
+  }
 }
 </script>
