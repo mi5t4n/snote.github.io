@@ -31,7 +31,7 @@ export const store = new Vuex.Store({
     setloadedNotes (state, payload) {
       state.loadedNotes = payload
     },
-    createMeetup (state, payload) {
+    createNote (state, payload) {
       state.loadedNotes.push(payload)
     },
     setUser (state, payload) {
@@ -51,7 +51,7 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    loadMeetups ({commit}) {
+    loadNotes ({commit}) {
       commit('setLoading', true)
       firebase.database().ref('meetups').once('value')
         .then((data) => {
@@ -77,26 +77,26 @@ export const store = new Vuex.Store({
           }
         )
     },
-    createMeetup ({commit, getters}, payload) {
-      const meetup = {
-        title: payload.title,
-        location: payload.location,
-        imageUrl: payload.imageUrl,
-        description: payload.description,
-        date: payload.date.toISOString(),
-        creatorId: getters.user.id
+    createNote ({commit, getters}, payload) {
+      const note = {
+        note: payload.note,
+        timestamp: payload.timestamp
       }
-      firebase.database().ref('meetups').push(meetup)
+      return new Promise((resolve, reject) => {
+        firebase.database().ref('notes').child(getters.uid).push(note)
         .then((data) => {
           const key = data.key
-          commit('createMeetup', {
-            ...meetup,
+          commit('createNote', {
+            ...note,
             id: key
           })
+          resolve()
         })
         .catch((error) => {
           console.log(error)
+          reject(error)
         })
+      });
       // Reach out to firebase and store it
     },
     signUserUp ({commit}, payload) {
@@ -213,6 +213,9 @@ export const store = new Vuex.Store({
         return false;
       else 
         return true;
+    },
+    uid(state){
+      return state.user.detail.uid;
     }
   }
 })

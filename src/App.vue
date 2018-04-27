@@ -56,7 +56,14 @@
     <md-snackbar :md-active.sync="success">Logged out successfully !!!</md-snackbar>
     <md-snackbar :md-active.sync="error.isError">{{ error.message }}</md-snackbar>
 
-    <md-button class="md-fab md-primary md-fab-bottom-right md-fixed" v-if="isUserLoggedIn == true">
+    <md-dialog-prompt
+      :md-active.sync="active"
+      v-model="value"
+      md-title="Write note"
+      md-input-maxlength="160"
+      md-input-placeholder=""
+      md-confirm-text="Done" v-on:md-confirm="addNote(value)" />
+    <md-button class="md-fab md-primary md-fab-bottom-right md-fixed" v-if="isUserLoggedIn == true" @click="active = true">
       <md-icon>edit</md-icon>
     </md-button>
   </div>
@@ -77,6 +84,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'App',
@@ -87,7 +95,9 @@ export default {
       isError: false,
       message: null
     },
-    success: false
+    success: false,
+    active: false,
+    value: null
   }),
   computed: {
     ...mapGetters([
@@ -104,8 +114,20 @@ export default {
   },
   methods: {
     ...mapActions([
-        'logout'
+        'logout',
+        'createNote'
       ]),
+      addNote(value){
+        if (value != '')
+          this.createNote({ note: value, timestamp: moment().valueOf() })
+          .then(() => {
+            this.error= { isError: true, message: 'Note added successfully !!!' }
+            this.value = '';
+          }).catch((error) => {
+            this.error= { isError: true, message: error.message }
+            console.log(error);
+          });
+      },
       userLogOut(){
         this.loading = true;
         this.logout().then(() => {

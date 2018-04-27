@@ -114,7 +114,7 @@
           })
           .catch((error) => {
             this.loading = false;
-            this.error = { isError: false, message: error.message }
+            this.error = { isError: true, message: error.message }
             this.success = false;
             console.log('error');
             console.log('promise error')
