@@ -35,10 +35,9 @@ new Vue({
       if (user) {
         this.$store.dispatch('autoSignIn', user)
         this.$router.push('/home')
+        this.$store.dispatch('loadNotes')
       }
     })
-    // this.$store.dispatch('loadMeetups')
-
   }
 });
 

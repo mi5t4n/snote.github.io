@@ -51,23 +51,21 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    loadNotes ({commit}) {
+    loadNotes ({commit, getters}) {
       commit('setLoading', true)
-      firebase.database().ref('meetups').once('value')
+      firebase.database().ref('notes').child(getters.uid).once('value')
         .then((data) => {
-          const meetups = []
+          const notes = []
           const obj = data.val()
           for (let key in obj) {
-            meetups.push({
+            notes.push({
               id: key,
-              title: obj[key].title,
-              description: obj[key].description,
-              imageUrl: obj[key].imageUrl,
-              date: obj[key].date,
-              creatorId: obj[key].creatorId
+              text: obj[key].text,
+              timestamp: obj[key].timestamp
             })
           }
-          commit('setloadedNotes', meetups)
+          console.log({ notes: notes })
+          commit('setloadedNotes', notes)
           commit('setLoading', false)
         })
         .catch(
@@ -79,7 +77,7 @@ export const store = new Vuex.Store({
     },
     createNote ({commit, getters}, payload) {
       const note = {
-        note: payload.note,
+        text: payload.text,
         timestamp: payload.timestamp
       }
       return new Promise((resolve, reject) => {
@@ -215,7 +213,10 @@ export const store = new Vuex.Store({
         return true;
     },
     uid(state){
-      return state.user.detail.uid;
+      if (state.user == null)
+        return false;
+      else
+        return state.user.detail.uid;
     }
   }
 })

@@ -119,7 +119,7 @@ export default {
       ]),
       addNote(value){
         if (value != '')
-          this.createNote({ note: value, timestamp: moment().valueOf() })
+          this.createNote({ text: value, timestamp: moment().valueOf() })
           .then(() => {
             this.error= { isError: true, message: 'Note added successfully !!!' }
             this.value = '';

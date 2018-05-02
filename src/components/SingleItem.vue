@@ -1,16 +1,13 @@
 <template>
   <div>
       <md-list-item>
-        <!-- <md-avatar>
-          <img src="https://placeimg.com/40/40/people/1" alt="People">
-        </md-avatar> -->
         <md-icon>
           fiber_manual_record
         </md-icon>
 
         <div class="md-list-item-text">
-          <span><h4> {{ title }} </h4></span>
-          <p><slot></slot></p>
+          <span> {{ text }}</span>
+          <p><i> {{ time }} </i> </p>
         </div>
 
       <md-menu>
@@ -32,7 +29,7 @@
 <script>
 export default {
   name: 'SingleItem',
-  props: ['title']
+  props: ['title','time','text']
 }
 </script>
 
