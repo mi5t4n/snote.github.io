@@ -6,18 +6,7 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    loadedNotes: [
-      {
-        id: 'afajfjadfaadfa323',
-        text: 'sagar',
-        timestamp:121212
-      },
-      {
-        id: 'afajfjadfaadfa323',
-        text: 'tamang',
-        timestamp:121212
-      }
-    ],
+    loadedNotes: [],
     user: null,
     loading: false,
     error: {
@@ -51,6 +40,32 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    deleteNote({commit,getters}, id){
+      commit('setLoading', true);
+      return new Promise((resolve, reject) => {
+        firebase.database().ref('notes').child(getters.uid).child(id).remove()
+        .then(() => {
+          resolve();
+        }).catch((error) => {
+          reject(error);
+        });
+      });
+    },
+    editNote({commit,getters}, payload){
+      commit('setLoading', true);
+      const editPost = {
+        text: payload.text,
+        timestamp: payload.timestamp
+      }
+      return new Promise((resolve, reject) => {
+        firebase.database().ref('notes').child(getters.uid).child(payload.id).update(editPost)
+        .then(() => {
+          resolve();
+        }).catch((error) => {
+          reject(error);
+        });
+      });
+    },
     loadNotes ({commit, getters}) {
       commit('setLoading', true)
       firebase.database().ref('notes').child(getters.uid).once('value')
