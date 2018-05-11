@@ -13,10 +13,17 @@
 
         <md-list>
 
-          <router-link to='/home'>
+          <router-link to='/' v-if="isUserLoggedIn == false">
             <md-list-item @click="menuVisible = !menuVisible">
               <md-icon>move_to_inbox</md-icon>
               <span class="md-list-item-text">Home</span>
+            </md-list-item>
+          </router-link>
+
+          <router-link to='/home' v-if="isUserLoggedIn == true">
+            <md-list-item @click="menuVisible = !menuVisible">
+              <md-icon>move_to_inbox</md-icon>
+              <span class="md-list-item-text">Dashboard</span>
             </md-list-item>
           </router-link>
 

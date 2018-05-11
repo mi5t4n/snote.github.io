@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { store } from '../store'
 // Import Vue Components
 import SignUp from '../components/SignUp.vue'
 import SignIn from '../components/SignIn.vue'
 import PasswordReset from '../components/PasswordReset.vue'
 import Home from '../components/Home.vue'
+import Default from '../components/Default.vue'
 
 Vue.use(Router)
 
@@ -13,12 +15,15 @@ export default new Router({
     {
       path: '/',
       name: 'Default',
-      component: SignIn
+      component: Default
     },
     {
       path: '/home',
       name: 'Home',
-      component: Home
+      component: Home,
+      beforeEnter: (to,from,next) => {
+        if (store.getters.user == null) next('/'); else next();
+      }
     },
     {
       path: '/signin',
@@ -35,11 +40,10 @@ export default new Router({
       name: 'PasswordReset',
       component: PasswordReset
     },
-    // {
-    //   path: '*',
-    //   name: 'ErrorPage',
-    //   component: { template: '<h1>Page Not Found</h1>' }
-    // }
-  ],
-  mode: 'history'
+    {
+      path: '*',
+      name: 'ErrorPage',
+      component: { template: '<h1>Page Not Found !!!</h1>' }
+    }
+  ]
 });
